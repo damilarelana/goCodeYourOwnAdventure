@@ -10,7 +10,7 @@ import (
 )
 
 // define flags
-var storyFilename *string = flag.String("file", "storyData.json", "a json file containing Story chapters, arcs and options")
+var storyFilename *string = flag.String("file", "../../storyData.json", "a json file containing Story chapters, arcs and options")
 
 // defines the error message handler
 func errMsgHandler(msg string) {
@@ -22,7 +22,7 @@ func errMsgHandler(msg string) {
 func openFile(storyFilename *string) *os.File {
 	openedFile, err := os.Open(*storyFilename)
 	if err != nil {
-		errMsgHandler(fmt.Sprintf("Failed to open JSON file: %s\n", *storyFilename))
+		errMsgHandler(fmt.Sprintf("Failed to open JSON file %s : %s\n", *storyFilename, err.Error()))
 	}
 	return openedFile
 }
