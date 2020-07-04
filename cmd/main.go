@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	c "github.com/damilarelana/goCYOA"
+	c "github.com/damilarelana/goCYOA/core"
 	m "github.com/damilarelana/goCYOA/middleware"
 )
 
@@ -20,8 +20,8 @@ func errMsgHandler(msg string) {
 
 func main() {
 	// parse flags
-	flag.Parse()                            // required to initialize the specified flags with the Operating system
-	var story c.Story                       // initialize the `story	` struct
+	flag.Parse()                             // required to initialize the specified flags with the Operating system
+	var story c.Story                        // initialize the `story	` struct
 	m.JSONFileHandler(storyFilename, &story) // pass the initialized story struct and json-data storyFilename
 
 	// print content

@@ -1,4 +1,4 @@
-package goCYOA
+package core
 
 // Story struct type required for navigation
 type Story map[string]Chapter

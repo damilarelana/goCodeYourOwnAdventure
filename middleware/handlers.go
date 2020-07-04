@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	cyoa "github.com/damilarelana/goCYOA"
+	cyoa "github.com/damilarelana/goCYOA/core"
 )
 
 // defines the error message handler
