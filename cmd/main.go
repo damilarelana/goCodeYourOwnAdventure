@@ -24,9 +24,11 @@ func renderTemplate(story c.Story) {
 	if err != nil {
 		errMsgHandler(fmt.Sprintf("Failed to parse goHTML file %s\n", err.Error()))
 	}
-	err = t.Execute(os.Stdout, story["intro"])
-	if err != nil {
-		errMsgHandler(fmt.Sprintf("Failed to render goHTML file %s\n", err.Error()))
+	for _, s := range story {
+		err = t.Execute(os.Stdout, s)
+		if err != nil {
+			errMsgHandler(fmt.Sprintf("Failed to render goHTML file %s\n", err.Error()))
+		}
 	}
 }
 
