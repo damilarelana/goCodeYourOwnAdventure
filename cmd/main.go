@@ -35,10 +35,6 @@ func main() {
 	flag.Parse()                             // required to initialize the specified flags with the Operating system
 	var story c.Story                        // initialize the `story	` struct
 	m.JSONFileHandler(storyFilename, &story) // pass the initialized story struct and json-data storyFilename
-
-	// // print content
+	renderTemplate(story)                    // render goHTML template
 	// fmt.Printf("%+v\n", story)
-
-	// render goHTML template
-	renderTemplate(story)
 }

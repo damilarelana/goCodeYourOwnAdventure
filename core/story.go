@@ -7,7 +7,7 @@ type Story map[string]Chapter
 type Chapter struct {
 	Title     string   `json:"title"`
 	Paragraph []string `json:"story"`
-	Options   []Option `json:"options"`
+	Option    []Option `json:"options"`
 }
 
 // Option struct
