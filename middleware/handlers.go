@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	cyoa "github.com/damilarelana/goCYOA/core"
+	c "github.com/damilarelana/goCYOA/core"
 )
 
 // defines the error message handler
@@ -32,7 +32,7 @@ func readFile(f *os.File) *json.Decoder {
 }
 
 // parseFile parses the jsonData into structData
-func parseFile(fileData *json.Decoder, story *cyoa.Story) {
+func parseFile(fileData *json.Decoder, story *c.Story) {
 	err := fileData.Decode(&story) // decode and parse the `json data` into `structs data` within the address space &story
 	if err != nil {
 		errMsgHandler(fmt.Sprintf("Failed to parse file data %v\n", *fileData))
@@ -42,7 +42,7 @@ func parseFile(fileData *json.Decoder, story *cyoa.Story) {
 // JSONFileHandler ...
 //	- pointer to the json filename : storyFilename
 //	- pointer to the story struct: story
-func JSONFileHandler(storyFilename *string, story *cyoa.Story) {
+func JSONFileHandler(storyFilename *string, story *c.Story) {
 	openedFile := openFile(storyFilename) // open file
 	fileData := readFile(openedFile)      // read file content
 	parseFile(fileData, story)            // parse file data and store it in the memory address `story`
