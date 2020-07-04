@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"html/template"
 	"os"
 
 	c "github.com/damilarelana/goCYOA/core"
@@ -10,12 +11,23 @@ import (
 )
 
 // define flags
-var storyFilename *string = flag.String("file", "../../storyData.json", "a json file containing Story chapters, arcs and options")
+var storyFilename *string = flag.String("file", "../storyData.json", "a json file containing Story chapters, arcs and options")
 
 // defines the error message handler
 func errMsgHandler(msg string) {
 	fmt.Println(msg)
 	os.Exit(1)
+}
+
+func renderTemplate(story c.Story) {
+	t, err := template.ParseFiles("../templates/storyChapter.gohtml")
+	if err != nil {
+		errMsgHandler(fmt.Sprintf("Failed to parse goHTML file %s\n", err.Error()))
+	}
+	err = t.Execute(os.Stdout, story["intro"])
+	if err != nil {
+		errMsgHandler(fmt.Sprintf("Failed to render goHTML file %s\n", err.Error()))
+	}
 }
 
 func main() {
@@ -24,6 +36,9 @@ func main() {
 	var story c.Story                        // initialize the `story	` struct
 	m.JSONFileHandler(storyFilename, &story) // pass the initialized story struct and json-data storyFilename
 
-	// print content
-	fmt.Printf("%+v\n", story)
+	// // print content
+	// fmt.Printf("%+v\n", story)
+
+	// render goHTML template
+	renderTemplate(story)
 }
