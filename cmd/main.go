@@ -14,7 +14,7 @@ import (
 
 // define flags
 var storyFilename *string = flag.String("file", "../storyData.json", "a json file containing Story chapters, arcs and options")
-var templateFilename *string = flag.String("template", "../templates/storyChapter.gohtml", "a goHtml file used to render the json file data")
+var templateFilename *string = flag.String("template", "../templates/gohtml/storyChapter.gohtml", "a goHtml file used to render the json file data")
 var switchToWebServer *bool = flag.Bool("switch", false, "a flag that switches template render from `Stdout` to `webserver`. Default is `false` i.e. `Stdout`. To switch to webserver, use `-switch=true`")
 var port *int = flag.Int("port", 8085, "a port where the local webserver listens")
 
@@ -49,17 +49,60 @@ func main() {
 				<title>Dynamic Adventure</title>
 				<meta name="description" content="">
 				<meta name="viewport" content="width=device-width, initial-scale=1">
+				<link rel="stylesheet" type="text/css" href="/templates/css/storyChapter.css">
 			</head>
 			<body>
-				<h1>{{.Title}}</h1>
-				{{range .Paragraph}} <!-- ranges over the story list -->
-					<p>{{.}}</p> <!-- dumps all the data in that list element -->
-				{{end}}
-				<ul>
-					{{range .Option}} <!-- range over the data in options -->
-						<li><a href="/{{.Arc}}">{{.Text}}</a></li>
+				<section class="page">
+					<h1>{{.Title}}</h1>
+					{{range .Paragraph}} <!-- ranges over the story list -->
+						<p>{{.}}</p> <!-- dumps all the data in that list element -->
 					{{end}}
-				</ul>
+					<ul>
+						{{range .Option}} <!-- range over the data in options -->
+							<li><a href="/{{.Arc}}">{{.Text}}</a></li>
+						{{end}}
+					</ul>
+				</section>
+				<style>
+					body {
+						font-family: Arial, Helvetica, sans-serif;
+					}
+					h1 {
+						text-align: center;
+						position: relative;
+					}
+					.page {
+						width: 80%;
+						max-width: 500px;
+						margin: auto;
+						margin-top: 400px;
+						margin-bottom: 40px;
+						padding: 80px;
+						background: #FFFCF6;
+						border: 1px solid #eee;
+						box-shadow: 0 10px 6px -6px #777;
+					}
+					ul{
+						border-top: 1px dotted #ccc;
+						padding-top: 10px 0 0 0;
+						-webkit-padding-start: 0;
+					}
+					li {
+						padding-top: 10px;
+					}
+					a,
+					a:visited {
+						text-decoration: none;
+						color: #6295b5;
+					}
+					a:active,
+					a:hover {
+						color: #7792a2;
+					}
+					p {
+						text-indent: 1em;
+					}
+			</style>
 			</body>
 		</html>`
 
