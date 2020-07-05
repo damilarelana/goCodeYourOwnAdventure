@@ -60,8 +60,7 @@ func (h handler) pathParser(r *http.Request) (path string) {
 	if path == "" || path == "/" {       // ensures that root path always starts at the first chapter
 		path = "/intro"
 	}
-	path = path[1:]
-	return path
+	return path[1:]
 }
 
 // WithTemplate defines a functional option behaviour when user provides a template
