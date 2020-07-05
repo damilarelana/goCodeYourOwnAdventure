@@ -17,23 +17,9 @@ type handler struct {
 	t *template.Template
 }
 
-// HandlerOptions to implement functional option changes
-type HandlerOptions func(h *handler) {
+// HandlerOptions is a struct of type `http.Handler` that is `optionally` used to extend (i.e. decorate) and existing function (which returns `http.Handler`
+type HandlerOptions func(h *handler)
 
-	func 
-	t          *template.Template
-	pathParser func(r *http.Request) string // handles the parsing of which URL path to return
-}
-
-pathParser (r *http.Request) string {
-	// dynamically change chapters via url path
-	path := strings.TrimSpace(r.URL.Path) // extract url path
-	if path == "" || path == "/" {        // ensures that root path always starts at the first chapter
-		path = "/intro"
-	}
-	path = path[1:]
-	return path
-}
 // CustomHandler ...
 func CustomHandler(s *c.Story, templateAsString string, opts ...HandlerOptions) http.Handler { // returns an interface
 	return handler{
@@ -43,7 +29,7 @@ func CustomHandler(s *c.Story, templateAsString string, opts ...HandlerOptions) 
 }
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) { // ensure that it implements that http.Handler interface
-	path := pathParser(r) // extract the path
+	path := h.pathParser(r) // extract the path
 	chapter, ok := (*h.s)[path]
 	if ok {
 		err := h.t.Execute(w, chapter)
@@ -54,6 +40,18 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) { // ensure t
 		return
 	}
 	http.Error(w, "'Chapter' data not found", http.StatusNotFound)
+}
+
+// pathParse() ...
+// method attached to the h handler
+func (h handler) pathParser(r *http.Request) (path string) {
+	// dynamically change chapters via url path
+	path = strings.TrimSpace(r.URL.Path) // extract url path
+	if path == "" || path == "/" {       // ensures that root path always starts at the first chapter
+		path = "/intro"
+	}
+	path = path[1:]
+	return path
 }
 
 // urlShortenerHomepage handler
