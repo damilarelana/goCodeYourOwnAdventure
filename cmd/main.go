@@ -106,7 +106,12 @@ func main() {
 			</body>
 		</html>`
 
-		mux := m.CustomHandler(&story, templateAsString) // create an instance of CustomHandler()
+		/* create an instance of CustomHandler()
+		- we can use `m.WithTemplate(InitTemplateForWeb(templateAsString))` to pass in another template here
+		- by passing it into the `CustomHandler` as the `opts`
+			+	mux := m.CustomHandler(&story, templateAsString, m.WithTemplate(InitTemplateForWeb(templateAsString))
+		*/
+		mux := m.CustomHandler(&story, templateAsString)
 
 		fmt.Println("\n==== ==== ==== ====")
 		serverAddress := fmt.Sprintf("127.0.0.1:%d", *port)

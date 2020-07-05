@@ -22,10 +22,20 @@ type HandlerOptions func(h *handler)
 
 // CustomHandler ...
 func CustomHandler(s *c.Story, templateAsString string, opts ...HandlerOptions) http.Handler { // returns an interface
-	return handler{
+	h := handler{ // set the default handler [prior to being changed by functional options]
 		s,
 		InitTemplateForWeb(templateAsString),
 	}
+
+	/* apply the functional options by
+	 	- iterating over the `Opts`
+		- then passing in the `original handler` for it to be `decorated` i.e. functionally extended by `Opts`
+		- then initiate this by calling `x.WithTemplate()` somewhere else in the code
+	*/
+	for _, opt := range opts {
+		opt(&h)
+	}
+	return h
 }
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) { // ensure that it implements that http.Handler interface
@@ -52,6 +62,13 @@ func (h handler) pathParser(r *http.Request) (path string) {
 	}
 	path = path[1:]
 	return path
+}
+
+// WithTemplate defines a functional option behaviour when user provides a template
+func WithTemplate(t *template.Template) HandlerOptions {
+	return func(h *handler) { // use the user defined `t` to adjust `h.t` i.e. the `InitTemplateForWeb`
+		h.t = t
+	}
 }
 
 // urlShortenerHomepage handler
