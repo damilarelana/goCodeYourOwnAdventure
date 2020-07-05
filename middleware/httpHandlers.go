@@ -1,11 +1,12 @@
 package middleware
 
 import (
-	"fmt"
 	"html/template"
 	"io"
+	"log"
 	"net/http"
 	"reflect"
+	"strings"
 
 	c "github.com/damilarelana/goCYOA/core"
 )
@@ -25,10 +26,23 @@ func CustomHandler(s *c.Story, templateAsString string) http.Handler { // return
 }
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) { // ensure that it implements that http.Handler interface
-	err := h.t.Execute(w, (*h.s)["intro"])
-	if err != nil {
-		errMsgHandler(fmt.Sprintf("CustomerHandler's method `handler` failed to render to webserver %s\n", err.Error()))
+
+	// dynamically change chapters via url path
+	path := strings.TrimSpace(r.URL.Path) // extract url path
+	if path == "" || path == "/" {        // ensures that root path always starts at the first chapter
+		path = "/intro"
 	}
+	path = path[1:]
+	chapter, ok := (*h.s)[path]
+	if ok {
+		err := h.t.Execute(w, chapter)
+		if err != nil {
+			log.Printf("%v", err)
+			http.Error(w, "Handler method, failed to render 'Chapter'\n", http.StatusInternalServerError)
+		}
+		return
+	}
+	http.Error(w, "'Chapter' data not found", http.StatusNotFound)
 }
 
 // urlShortenerHomepage handler
