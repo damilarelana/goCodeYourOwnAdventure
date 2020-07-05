@@ -21,7 +21,7 @@ func ConvertTemplateToString(t *template.Template) string {
 }
 
 // ParseTemplate ...
-func ParseTemplate(story c.Story, templateFilename *string) *template.Template {
+func ParseTemplate(templateFilename *string) *template.Template {
 	t, err := template.ParseFiles(*templateFilename)
 	if err != nil {
 		errMsgHandler(fmt.Sprintf("Failed to parse goHTML file %s\n", err.Error()))
@@ -37,4 +37,10 @@ func RenderToStdout(t *template.Template, story c.Story) {
 			errMsgHandler(fmt.Sprintf("Failed to render goHTML file %s\n", err.Error()))
 		}
 	}
+}
+
+// InitTemplateForWeb ...
+func InitTemplateForWeb(templateAsString string) *template.Template {
+	t := template.Must(template.New("").Parse(templateAsString))
+	return t
 }
