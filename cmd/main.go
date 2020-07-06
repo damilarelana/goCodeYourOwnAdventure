@@ -191,7 +191,13 @@ func main() {
 			+	mux := m.CustomHandler(&story, templateAsString, m.WithTemplate(InitTemplateForWeb(templateAsString))
 			+ instead of just `mux := m.CustomHandler(&story, templateAsString)`
 		*/
-		mux := m.CustomHandler(&story, templateAsString, m.WithTemplate(m.InitTemplateForWeb(storyTemplateAsString)), m.WithCustomPathFn(customPathFunction))
+		customMux := m.CustomHandler(&story, templateAsString, m.WithTemplate(m.InitTemplateForWeb(storyTemplateAsString)), m.WithCustomPathFn(customPathFunction))
+
+		/*
+			Initialize the DefaultMux [to help with 404 page handling]
+			passing the customMux
+		*/
+		mux := m.DefaultMux(customMux)
 
 		fmt.Println("\n==== ==== ==== ====")
 		serverAddress := fmt.Sprintf("127.0.0.1:%d", *port)

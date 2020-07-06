@@ -98,10 +98,6 @@ func WithCustomPathFn(fn func(r *http.Request) string) HandlerOptions {
 
 // urlShortenerHomepage handler
 func storyHomePage(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		custom404PageHandler(w, r, http.StatusNotFound)
-		return
-	}
 	dataHomePage := "CYOA homepage"
 	io.WriteString(w, dataHomePage)
 }
@@ -111,7 +107,21 @@ func custom404PageHandler(w http.ResponseWriter, r *http.Request, status int) {
 	w.Header().Set("Content-Type", "text/html") // set the content header type
 	w.WriteHeader(status)                       // this automatically generates a 404 status code
 	if reflect.DeepEqual(status, http.StatusNotFound) {
-		data404Page := "This page does not exist ... 404!" // custom error message content
+		data404Page := "This story page does not exist ... 404!" // custom error message content
 		io.WriteString(w, data404Page)
 	}
+}
+
+/*
+DefaultMux defines the router Mux that:
+	 * takes in our customHandler
+   * initializes a new Mux
+	 * maps routes to what we want the root path to be
+	 * does NOT use the custom404PageHandler i.e. all 404 page currently gets routed back to `/`
+*/
+func DefaultMux(customHandler http.Handler) *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", storyHomePage)
+	mux.Handle("/story/", customHandler)
+	return mux
 }
