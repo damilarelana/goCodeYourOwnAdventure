@@ -28,8 +28,9 @@ The code leverages the following packages:
 ### Example
 To run the code nominally, start the local webserver by running:
 ```bash
-    $ ./main/main
+    $ ./cmd -switch=true
 ```
+Then got to either `http://127.0.0.1:8085/story` or `http://127.0.0.1:8085` depending on if customPathFunction is used [or otherwise] respectively
 
 
 ### To Do

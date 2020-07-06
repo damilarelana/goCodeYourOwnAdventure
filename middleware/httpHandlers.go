@@ -13,8 +13,9 @@ import (
 
 // Handler struct for the story rendering via CustomMux()
 type handler struct {
-	s *c.Story
-	t *template.Template
+	s            *c.Story
+	t            *template.Template
+	customPathFn func(r *http.Request) string
 }
 
 // HandlerOptions is a struct of type `http.Handler` that is `optionally` used to extend (i.e. decorate) and existing function (which returns `http.Handler`
@@ -25,6 +26,7 @@ func CustomHandler(s *c.Story, templateAsString string, opts ...HandlerOptions) 
 	h := handler{ // set the default handler [prior to being changed by functional options]
 		s,
 		InitTemplateForWeb(templateAsString),
+		defaultPathParser, // notice it was passed with without `r` argument - that would be passed when called
 	}
 
 	/* apply the functional options by
@@ -39,7 +41,8 @@ func CustomHandler(s *c.Story, templateAsString string, opts ...HandlerOptions) 
 }
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) { // ensure that it implements that http.Handler interface
-	path := h.pathParser(r) // extract the path
+	// path := h.pathParser(r) // extract the path
+	path := h.customPathFn(r) // calling `customPathFn` inherently goes back to call `defaultPathParser`
 	chapter, ok := (*h.s)[path]
 	if ok {
 		err := h.t.Execute(w, chapter)
@@ -63,10 +66,33 @@ func (h handler) pathParser(r *http.Request) (path string) {
 	return path[1:]
 }
 
+/* defaultPathFn() ... is optional [as POC]
+- can also be implemented via functional options using the `method` pathParser
+- this just shows how the same thing can be done via functional options
+*/
+func defaultPathParser(r *http.Request) (path string) {
+	// dynamically change chapters via url path
+	path = strings.TrimSpace(r.URL.Path) // extract url path
+	if path == "" || path == "/" {       // ensures that root path always starts at the first chapter
+		path = "/intro"
+	}
+	return path[1:]
+}
+
 // WithTemplate defines a functional option behaviour when user provides a template
 func WithTemplate(t *template.Template) HandlerOptions {
 	return func(h *handler) { // use the user defined `t` to adjust `h.t` i.e. the `InitTemplateForWeb`
 		h.t = t
+	}
+}
+
+/*
+WithCustomPathFn defines a functional option behaviour when user provides a customer Path function
+	- note that `func(r *http.Request) string` means it the type is a `a function that returns a string`
+*/
+func WithCustomPathFn(fn func(r *http.Request) string) HandlerOptions {
+	return func(h *handler) { // use the user defined `t` to adjust `h.t` i.e. the `InitTemplateForWeb`
+		h.customPathFn = fn
 	}
 }
 
