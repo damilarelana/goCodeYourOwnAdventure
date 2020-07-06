@@ -195,7 +195,7 @@ func main() {
 
 		/*
 			Initialize the DefaultMux [to help with 404 page handling]
-			passing the customMux
+			passing the
 		*/
 		mux := m.DefaultMux(customMux)
 
