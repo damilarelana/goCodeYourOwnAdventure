@@ -21,8 +21,12 @@ type handler struct {
 // HandlerOptions is a struct of type `http.Handler` that is `optionally` used to extend (i.e. decorate) and existing function (which returns `http.Handler`
 type HandlerOptions func(h *handler)
 
-// CustomHandler ...
-func CustomHandler(s *c.Story, templateAsString string, opts ...HandlerOptions) http.Handler { // returns an interface
+/*
+HandlerConstructor ...
+ - instantiates a instance of the handler struct i.e. an interface
+ - using the factor approach i.e. without exposing the internals to where it is needed
+*/
+func HandlerConstructor(s *c.Story, templateAsString string, opts ...HandlerOptions) http.Handler { // returns an interface
 	h := handler{ // set the default handler [prior to being changed by functional options]
 		s,
 		InitTemplateForWeb(templateAsString),
@@ -67,7 +71,7 @@ func (h handler) pathParser(r *http.Request) (path string) {
 }
 
 /* defaultPathFn() ... is optional [as POC]
-- can also be implemented via functional options using the `method` pathParser
+- can also be implemented using the `method` pathParser
 - this just shows how the same thing can be done via functional options
 */
 func defaultPathParser(r *http.Request) (path string) {

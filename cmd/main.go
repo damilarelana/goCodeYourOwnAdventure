@@ -185,13 +185,13 @@ func main() {
 			</body>
 		</html>`
 
-		/* create an instance of CustomHandler()
+		/* create an instance of HandlerConstructor()
 		- we can use `m.WithTemplate(InitTemplateForWeb(templateAsString))` to pass in another template here
-		- by passing it into the `CustomHandler` as the `opts`
-			+	mux := m.CustomHandler(&story, templateAsString, m.WithTemplate(InitTemplateForWeb(templateAsString))
-			+ instead of just `mux := m.CustomHandler(&story, templateAsString)`
+		- by passing it into the `HandlerConstructor` as the `opts`
+			+	mux := m.HandlerConstructor(&story, templateAsString, m.WithTemplate(InitTemplateForWeb(templateAsString))
+			+ instead of just `mux := m.HandlerConstructor(&story, templateAsString)`
 		*/
-		customMux := m.CustomHandler(&story, templateAsString, m.WithTemplate(m.InitTemplateForWeb(storyTemplateAsString)), m.WithCustomPathFn(customPathFunction))
+		customMux := m.HandlerConstructor(&story, templateAsString, m.WithTemplate(m.InitTemplateForWeb(storyTemplateAsString)), m.WithCustomPathFn(customPathFunction))
 
 		/*
 			Initialize the DefaultMux [to help with 404 page handling]
