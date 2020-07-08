@@ -13,7 +13,7 @@ The code leverages the following packages:
 * [json-to-Go](https://mholt.github.io/json-to-go/)
 * `flags`
 * `net/http`
-8 `io`
+* `io`
 * `fmt`
 * `strings`
 * `log`
